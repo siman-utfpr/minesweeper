@@ -1,13 +1,12 @@
 function createBoard(height, width, mines) {
   let board = initializeBoard(height, width);
-  let minesPlaced = 0;
-  while (minesPlaced != mines) {
-    let x = Math.floor(Math.random() * height);
-    let y = Math.floor(Math.random() * width);
-    if ((x != 0 && y != 0) && (board[x][y]) == 0) {
-      board = placeMine(board, x, y);
-      minesPlaced++;
-    }
+  let availablePositions = listAvailablePosition(height, width);
+  for (let i = 0; i < mines; i++) {
+    let selectedIndex = Math.floor(Math.random() * availablePositions.length);
+    let position = availablePositions[selectedIndex];
+    let [x, y] = position;
+    availablePositions.splice(selectedIndex, 1);
+    board = placeMine(board, x, y);
   }
   console.table(board);
 }
@@ -36,5 +35,16 @@ function placeMine(board, x, y) {
   return board;
 }
 
-createBoard(16, 30, 30);
+function listAvailablePosition(height, width) {
+  let availablePositions = [];
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      if (i == 0 && j == 0) continue;
+      availablePositions.push([i, j]);
+    }
+  }
+  return availablePositions;
+}
+
+createBoard(16, 16, 1);
 
